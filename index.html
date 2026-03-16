@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sinanxlord Fitness Hub | Profesyonel Spor Blogu</title>
+    <style>
+        /* ========== GENEL STILLER ========== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #e0e0e0;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ========== NAVBAR ========== */
+        .navbar {
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 3px solid #ff9800;
+            box-shadow: 0 4px 20px rgba(255, 152, 0, 0.3);
+        }
+
+        .navbar button {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            background: transparent;
+            color: #fff;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 152, 0, 0.3);
+            font-size: 0.95rem;
+        }
+
+        .navbar button:hover {
+            background: #ff9800;
+            color: #000;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(255, 152, 0, 0.4);
+            border-color: #ff9800;
+        }
+
+        /* ========== GERİ BUTONU ========== */
+        .back-button {
+            position: fixed;
+            bottom: 100px;
+            right: 25px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #333, #222);
+            border: 2px solid #ff9800;
+            color: #ff9800;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .back-button:hover {
+            transform: scale(1.1);
+            background: #ff9800;
+            color: #000;
+        }
+
+        .back-button.active {
+            display: flex;
+        }
+
+        /* ========== SAYFA ICERIKLERI ========== */
+        .page {
+            display: none;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .active-page {
+            display: block !important;
+        }
+
+        /* ========== KARTLAR ========== */
+        .card {
+            background: rgba(30, 30, 30, 0.95);
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 152, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(255, 152, 0, 0.2);
+        }
+
+        .card h2 {
+            color: #ff9800;
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid #ff9800;
+            display: inline-block;
+            padding-bottom: 0.5rem;
+            font-size: 2rem;
+        }
+
+        /* ========== BLOG KARTI ========== */
+        .blog-card {
+            background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+            border-left: 5px solid #ff9800;
+        }
+
+        .blog-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255,152,0,0.3);
+            padding-bottom: 1rem;
+        }
+
+        .blog-icon {
+            font-size: 3rem;
+            background: #ff9800;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #000;
+        }
+
+        .blog-title {
+            font-size: 1.8rem;
+            color: #ff9800;
+            font-weight: bold;
+        }
+
+        .blog-content {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            text-align: left;
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 1rem;
+        }
+
+        .blog-content p {
+            margin-bottom: 1rem;
+        }
+
+        .blog-footer {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255,152,0,0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #888;
+        }
+
+        .blog-timer {
+            background: #ff9800;
+            color: #000;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        /* ========== MOTIVASYON KARTI ========== */
+        .motivation-card {
+            background: linear-gradient(45deg, #ff9800, #ff5722);
+            color: #000;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .motivation-card::before {
+            content: '"';
+            font-size: 10rem;
+            position: absolute;
+            top: -20px;
+            left: 10px;
+            opacity: 0.2;
+            color: #fff;
+            font-family: serif;
+        }
+
+        .motivation-text {
+            font-size: 2rem;
+            font-weight: bold;
+            position: relative;
+            z-index: 1;
+        }
+
+        .motivation-author {
+            margin-top: 1rem;
+            font-size: 1.2rem;
+            opacity: 0.8;
+        }
+
+        /* ========== FORM ELEMANLARI ========== */
+        input, textarea, select {
+            width: 100%;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 12px;
+            border: 2px solid #333;
+            background: #222;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #ff9800;
+            box-shadow: 0 0 15px rgba(255, 152, 0, 0.3);
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(45deg, #ff9800, #ff5722);
+            border: none;
+            color: white;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(255, 152, 0, 0.5);
+        }
+
+        /* ========== YORUM KUTUSU ========== */
+        .commentBox {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 12px;
+            border-left: 4px solid #ff9800;
+            border: 1px solid rgba(255, 152, 0, 0.2);
+        }
+
+        .commentBox b {
+            color: #ff9800;
+            font-size: 1.1rem;
+        }
+
+        .commentBox small {
+            color: #888;
+            font-size: 0.8rem;
+            display: block;
+            margin-top: 0.5rem;
+        }
+
+        .commentBox button {
+            background: transparent;
+            border: 1px solid #ff9800;
+            color: #ff9800;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 0.5rem;
+        }
+
+        .commentBox button:hover {
+            background: #ff9800;
+            color: #000;
+        }
+
+        /* ========== MUZIK BUTONU ========== */
+        #musicBtn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #ff9800, #ff5722);
+            border: none;
+            color: white;
+            font-size: 1.8rem;
+            cursor: pointer;
+            box-shadow: 0 5px 25px rgba(255, 152, 0, 0.6);
+            transition: all 0.3s ease;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #musicBtn:hover {
+            transform: rotate(360deg) scale(1.1);
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: auto;
+            background: rgba(0, 0, 0, 0.5);
+            color: #888;
+            border-top: 1px solid rgba(255,152,0,0.2);
+        }
+
+        /* ========== PROGRESS BAR ========== */
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,152,0,0.2);
+            border-radius: 2px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #ff9800;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        /* ========== FITNESS PROGRAMI ========== */
+        .fitness-day {
+            background: #1a1a1a;
+            padding: 1.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            border-left: 5px solid #ff9800;
+        }
+
+        .fitness-day h3 {
+            color: #ff9800;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .fitness-subtitle {
+            color: #fff;
+            border-bottom: 2px solid #ff9800;
+            padding-bottom: 0.5rem;
+            margin: 1.5rem 0 1rem 0;
+        }
+
+        .fitness-exercise {
+            margin: 0.8rem 0;
+            padding: 0.5rem;
+            background: #252525;
+            border-radius: 8px;
+            border-left: 3px solid #ff9800;
+        }
+
+        .badge {
+            background: #ff9800;
+            color: #000;
+            padding: 0.2rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 0.5rem;
+        }
+
+        .fitness-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .movie-item {
+            background: #2a2a2a;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .movie-item:hover {
+            border: 1px solid #ff9800;
+            transform: scale(1.05);
+        }
+
+        .game-id {
+            background: #2a2a2a;
+            padding: 1.5rem;
+            border-radius: 12px;
+        }
+
+        .game-id code {
+            background: #000;
+            padding: 0.5rem;
+            display: inline-block;
+            border-radius: 6px;
+            color: #ff9800;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========== NAVIGATION ========== -->
+    <div class="navbar">
+        <button onclick="openPage('home')">🏠 Ana Sayfa</button>
+        <button onclick="openPage('fitness')">💪 Fitness</button>
+        <button onclick="openPage('bmi')">⚖️ BMI</button>
+        <button onclick="openPage('games')">🎮 Oyun</button>
+        <button onclick="openPage('films')">🎬 Film</button>
+        <button onclick="openPage('boykot')">🚫 Boykot</button>
+        <button onclick="openPage('adminLogin')">🔑 Admin Giriş</button>
+    </div>
+
+    <!-- ========== GERİ BUTONU ========== -->
+    <button class="back-button" id="backBtn" onclick="goBack()">←</button>
+
+    <!-- ========== ANA SAYFA ========== -->
+    <div id="home" class="page active-page">
+        <!-- Motivasyon Kartı -->
+        <div class="card motivation-card">
+            <h2>💭 GÜNÜN SÖZÜ</h2>
+            <div class="motivation-text" id="motivationText">Yükleniyor...</div>
+            <div class="motivation-author" id="motivationAuthor"></div>
+        </div>
+
+        <!-- Blog Kartı -->
+        <div class="card blog-card">
+            <div class="blog-header">
+                <div class="blog-icon">📰</div>
+                <div>
+                    <div class="blog-title" id="blogTitle">Ünlü Sporcuların İlham Veren Hikayeleri</div>
+                </div>
+            </div>
+            
+            <div class="blog-content" id="blogContent">
+                <!-- İçerik JavaScript ile doldurulacak -->
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="blogProgress"></div>
+            </div>
+            
+            <div class="blog-footer">
+                <span id="blogCounter">1 / 6</span>
+                <span class="blog-timer" id="blogTimer">15 saniye</span>
+            </div>
+        </div>
+
+        <!-- Yorumlar -->
+        <div class="card">
+            <h2>💬 YORUMLAR</h2>
+            <input id="isim" placeholder="Adınız" maxlength="50">
+            <textarea id="yorum" placeholder="Yorumunuz..." rows="3"></textarea>
+            <button class="btn" onclick="yorumEkle()">📤 Gönder</button>
+            <div id="yorumList" style="margin-top: 2rem;"></div>
+        </div>
+    </div>
+
+    <!-- ========== FITNESS ========== -->
+    <div id="fitness" class="page">
+        <div class="card">
+            <h2>📅 PROFESYONEL FITNESS PROGRAMI</h2>
+            
+            <div style="background: #ff980020; padding: 1rem; border-radius: 10px; margin-bottom: 2rem;">
+                <p style="color: #ff9800; font-weight: bold;">⚠️ NOT: "10+10" DROP SET demektir. Ağırlığı düşürüp tekrara devam et.</p>
+            </div>
+
+            <!-- 1. GÜN -->
+            <div class="fitness-day">
+                <h3>🔥 1. GÜN: SIRT + BICEPS</h3>
+                <h4 class="fitness-subtitle">LAT PULLDOWN</h4>
+                <div class="fitness-exercise">🔸 V Bar Lat Pulldown - 5x8-10</div>
+                <div class="fitness-exercise">🔸 Reverse Grip Lat Pulldown - 4x12-15 <span class="badge">son set drop</span></div>
+                
+                <h4 class="fitness-subtitle">ROW</h4>
+                <div class="fitness-exercise">🔸 Seated Row - 4x10-12</div>
+                <div class="fitness-exercise">🔸 One Arm Cable Row - 3x10+10 <span class="badge">SUPERSET</span></div>
+                
+                <h4 class="fitness-subtitle">SIRT SON</h4>
+                <div class="fitness-exercise">🔸 Straight Arm Pulldown - 4x15-20</div>
+                
+                <h4 class="fitness-subtitle">BICEPS</h4>
+                <div class="fitness-exercise">🔸 Barbell Curl - 4x12-15</div>
+                <div class="fitness-exercise">🔸 Dumbbell Hammer Curl - 4x10-12 <span class="badge">SUPERSET</span></div>
+            </div>
+
+            <!-- 2. GÜN -->
+            <div class="fitness-day">
+                <h3>💪 2. GÜN: GÖĞÜS + TRICEPS</h3>
+                <div class="fitness-exercise">🔸 Bench Press - 5x8-10</div>
+                <div class="fitness-exercise">🔸 Incline Smith Press - 5x10-12</div>
+                <div class="fitness-exercise">🔸 Cable Crossover - 4x12-15 <span class="badge">drop</span></div>
+                <div class="fitness-exercise">🔸 Dumbbell Fly - 4x10-12</div>
+                <div class="fitness-exercise">🔸 Incline Cable Fly - 3x15-20</div>
+                <div class="fitness-exercise">🔸 Rope Pushdown - 4x12-15</div>
+                <div class="fitness-exercise">🔸 Overhead Extension + V Bar - 4x10/10 <span class="badge">SUPERSET</span></div>
+                <div class="fitness-exercise">🔸 One Arm Kickback - 3x15-20</div>
+            </div>
+
+            <!-- 3. GÜN -->
+            <div class="fitness-day">
+                <h3>🦵 3. GÜN: BACAK</h3>
+                <div class="fitness-exercise">🔸 Squat - 4x8</div>
+                <div class="fitness-exercise">🔸 Leg Press - 4x12</div>
+                <div class="fitness-exercise">🔸 Leg Extension - 3x15</div>
+                <div class="fitness-exercise">🔸 Leg Curl - 3x15</div>
+            </div>
+
+            <!-- 4. GÜN -->
+            <div class="fitness-day">
+                <h3>🏋️ 4. GÜN: OMUZ + KOL</h3>
+                <div class="fitness-exercise">🔸 Shoulder Press - 5x8-10</div>
+                <div class="fitness-exercise">🔸 Lateral Raises - 5x10-12</div>
+                <div class="fitness-exercise">🔸 Face Pull - 3x15-20</div>
+                <div class="fitness-exercise">🔸 Front Raises + Raises - 4x12+12 <span class="badge">SUPERSET</span></div>
+                <div class="fitness-exercise">🔸 Bent Over Lateral - 4x10+10 <span class="badge">DROP SET</span></div>
+                <div class="fitness-exercise">🔸 Barbell Shrug - 4x10-12</div>
+                <div class="fitness-exercise">🔸 Triceps + Biceps Curl - 4x10/10 <span class="badge">SUPERSET</span></div>
+                <div class="fitness-exercise">🔸 Reverse Triceps + Hammer - 4x10/10 <span class="badge">SUPERSET</span></div>
+            </div>
+
+            <div class="fitness-grid">
+                <div class="fitness-day">
+                    <h3>5. GÜN: OMUZ + KARIN</h3>
+                    <div class="fitness-exercise">🔸 Shoulder Press 4x8</div>
+                    <div class="fitness-exercise">🔸 Lateral Raise 4x12</div>
+                    <div class="fitness-exercise">🔸 Front Raise 3x12</div>
+                    <div class="fitness-exercise">🔸 Plank 3x60 sn</div>
+                </div>
+                <div class="fitness-day">
+                    <h3>6. GÜN: KARDİYO</h3>
+                    <div class="fitness-exercise">🔸 Koşu 30 dk</div>
+                    <div class="fitness-exercise">🔸 Bisiklet 20 dk</div>
+                    <div class="fitness-exercise">🔸 İp Atlama 10 dk</div>
+                </div>
+                <div class="fitness-day">
+                    <h3>7. GÜN: DİNLENME</h3>
+                    <div class="fitness-exercise">🔸 Yüzme</div>
+                    <div class="fitness-exercise">🔸 Sauna</div>
+                    <div class="fitness-exercise">🔸 Esneme</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== BMI ========== -->
+    <div id="bmi" class="page">
+        <div class="card">
+            <h2>📊 BMI HESAPLAMA</h2>
+            <input id="kilo" placeholder="Kilo (kg)" type="number">
+            <input id="boy" placeholder="Boy (cm)" type="number">
+            <button onclick="bmiHesapla()" class="btn">Hesapla</button>
+            <p id="bmiSonuc" style="font-size: 1.3rem; margin-top: 1rem;"></p>
+        </div>
+
+        <div class="card">
+            <h2>🔥 KALORİ HESAPLAMA</h2>
+            <input id="yas" placeholder="Yaş" type="number">
+            <input id="kiloKalori" placeholder="Kilo (kg)" type="number">
+            <input id="boyKalori" placeholder="Boy (cm)" type="number">
+            <select id="cinsiyet">
+                <option value="erkek">Erkek</option>
+                <option value="kadin">Kadın</option>
+            </select>
+            <select id="aktivite">
+                <option value="1.2">🚫 Hareketsiz</option>
+                <option value="1.375">🚶 Az aktif</option>
+                <option value="1.55">🏃 Orta aktif</option>
+                <op
